@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Domain.Services;
 
-public class BlogService : IBlogService
+internal class BlogService : IBlogService
 {
     private const int MaxPostsQueryLimit = 10000;
 
