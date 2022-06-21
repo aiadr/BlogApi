@@ -1,6 +1,16 @@
 # BlogApi
 ## About
 BlogApi is a backend service for your blog based on PostgreSql storage
+## Authentication
+- API uses HTTP Basic Authentication for editing blog posts
+- Use `Authorize` button in SwaggerUI to test endpoints in Development environment
+## Endpoints
+*See schema descriptions in SwaggerUI*
+- `POST /posts` - create a post
+- `PUT /posts/{postId}` - edit post
+- `DELETE /posts/{postId}` - delete post
+- `GET /posts/{postId}` - get single post
+- `GET /posts` - get all posts (with sorting, offset and limit)
 ## How to run
 ### Debug in IDE
 1. Have PostgreSql server ready to use
@@ -26,13 +36,3 @@ BlogApi is a backend service for your blog based on PostgreSql storage
 *Replace necessary parameters*\
 `docker run -d --name blogapi --network blognet -p 80:80 -e ConnectionStrings__BlogContext="Server=postgres;Port=5432;Database=BlogDb;User Id=postgres;Password=admin;" -e ASPNETCORE_ENVIRONMENT="Development" -e Auth__Username="admin" -e Auth__Password="admin" blogapi`
 7. Open `http://localhost/swagger` in browser to see SwaggerUI
-## Authentication
-- API uses HTTP Basic Authentication for editing blog posts
-- Use `Authorize` button in SwaggerUI to test endpoints in Development environment
-## Endpoints
-*See schema descriptions in SwaggerUI*
-- `POST /posts` - create a post
-- `PUT /posts/{postId}` - edit post
-- `DELETE /posts/{postId}` - delete post
-- `GET /posts/{postId}` - get single post
-- `GET /posts` - get all posts (with sorting, offset and limit)
