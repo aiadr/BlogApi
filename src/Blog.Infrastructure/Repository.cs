@@ -36,7 +36,7 @@ internal class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     public IAsyncEnumerable<TResult> GetReadOnlyListAsync<TResult>(
         Func<IQueryable<TEntity>, IQueryable<TResult>> queryBuilder)
     {
-        return queryBuilder(_context.Set<TEntity>()).AsAsyncEnumerable();
+        return queryBuilder(_context.Set<TEntity>().AsNoTracking()).AsAsyncEnumerable();
     }
 
     public async Task AddAsync(TEntity item, CancellationToken cancellationToken = default)
