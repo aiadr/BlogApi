@@ -1,4 +1,8 @@
-using Blog.Domain.Contracts;
+using System.Runtime.CompilerServices;
+using AutoMapper;
+using Blog.Api.Models;
+using Blog.Entities;
+using Blog.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +13,12 @@ namespace Blog.Api.Controllers;
 public class PostsController : Controller
 {
     private readonly IBlogService _blogService;
+    private readonly IMapper _mapper;
 
-    public PostsController(IBlogService blogService)
+    public PostsController(IBlogService blogService, IMapper mapper)
     {
         _blogService = blogService;
+        _mapper = mapper;
     }
 
     [HttpGet("{id:long}")]
@@ -32,29 +38,39 @@ public class PostsController : Controller
 
     [HttpGet]
     [ProducesResponseType(typeof(IAsyncEnumerable<PostDto>), StatusCodes.Status200OK)]
-    public IAsyncEnumerable<PostDto> GetAllPosts(
+    public async IAsyncEnumerable<PostDto> GetAllPosts(
         PostsSortField? sortField,
         bool? sortDescending,
         int? limit,
         int? offset,
-        CancellationToken cancellationToken) =>
-        _blogService.GetAllPostsAsync(sortField, sortDescending, limit, offset, cancellationToken);
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        await foreach (var post in _blogService.GetAllPostsAsync(
+                           sortField,
+                           sortDescending,
+                           limit,
+                           offset,
+                           cancellationToken))
+        {
+            yield return _mapper.Map<PostDto>(post);
+        }
+    }
 
     [Authorize]
     [HttpPost]
     [ProducesResponseType(typeof(PostDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreatePost(PostContentDto contentDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreatePost(CreatePostDto dto, CancellationToken cancellationToken)
     {
-        return Ok(await _blogService.CreatePostAsync(contentDto, cancellationToken));
+        return Ok(await _blogService.CreatePostAsync(_mapper.Map<Post>(dto), cancellationToken));
     }
 
     [Authorize]
-    [HttpPut("{id:long}")]
+    [HttpPut]
     [ProducesResponseType(typeof(PostDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdatePost(long id, PostContentDto contentDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdatePost(UpdatePostDto dto, CancellationToken cancellationToken)
     {
-        var post = await _blogService.UpdatePostAsync(id, contentDto, cancellationToken);
+        var post = await _blogService.UpdatePostAsync(_mapper.Map<Post>(dto), cancellationToken);
 
         if (post == null)
         {

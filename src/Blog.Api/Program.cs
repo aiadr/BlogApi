@@ -1,8 +1,7 @@
 using System.Text.Json.Serialization;
 using Blog.Api.Configuration;
-using Blog.DataAccess;
-using Blog.Domain.Configuration;
-using Microsoft.EntityFrameworkCore;
+using Blog.Infrastructure;
+using Blog.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +15,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.ConfigureSwagger();
 
 builder.Services.ConfigureAuth(builder.Configuration);
-
-builder.Services.AddDbContext<BlogContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("BlogContext")));
-
-builder.Services.ConfigureBlog();
+builder.Services.ConfigureInfrastructure(builder.Configuration.GetConnectionString("BlogContext"));
+builder.Services.ConfigureServices();
+builder.Services.ConfigureApiMapping();
 
 var app = builder.Build();
 
@@ -31,13 +28,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-
-    var context = services.GetRequiredService<BlogContext>();
-    context.Database.EnsureCreated();
-}
+app.Services.UseInfrastructure();
 
 app.UseHttpsRedirection();
 

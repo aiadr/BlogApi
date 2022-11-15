@@ -1,18 +1,19 @@
-using Blog.DataAccess;
+using Blog.Infrastructure;
+using Blog.Infrastructure.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Blog.Domain.Tests.Helpers;
+namespace Blog.Services.Tests.Helpers;
 
-public static class DbContextHelper
+public static class RepositoryHelper
 {
-    public static BlogContext Build()
+    public static IRepository<TEntity> BuildInMemoryRepository<TEntity>() where TEntity : class
     {
         var options = new DbContextOptionsBuilder<BlogContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .Options;
 
-        return new BlogContext(options);
+        return new Repository<TEntity>(new BlogContext(options));
     }
 }

@@ -1,9 +1,9 @@
-using Blog.DataAccess.Models;
+using Blog.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Blog.DataAccess;
+namespace Blog.Infrastructure;
 
-public class BlogContext : DbContext
+internal class BlogContext : DbContext
 {
     public BlogContext(DbContextOptions options) : base(options)
     {
