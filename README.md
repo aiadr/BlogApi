@@ -12,17 +12,16 @@ BlogApi is a backend service for your blog based on PostgreSql storage
 - `GET /posts/{postId}` - get single post
 - `GET /posts` - get all posts (with sorting, offset and limit)
 ## How to run
+### Deploy to Docker
+1. Deploy using [docker-compose](src/docker-compose.yml) file\
+`docker-compose -f src/docker-compose.yml up -d`
+2. Open [http://localhost/swagger](http://localhost/swagger) in browser to see SwaggerUI
 ### Debug in IDE
 1. Have PostgreSql server ready to use
-2. Open solution in your IDE `BlogApiRepo/src/BlogApi.sln`
-3. Edit configuration file `Blog.Api/appsettings.Development.json`
+2. Open solution in your IDE [BlogApi.sln](src/BlogApi.sln)
+3. Edit configuration file [appsettings.Development.json](src/Blog.Api/appsettings.Development.json)
     - `ConnectionStrings/BlogContext` - connection to your SQL DB
     - `Auth/Username` - administrator username
     - `Auth/Password` - administrator password
 4. Start debugging
-5. Open `https://localhost:7075/swagger` in browser to see SwaggerUI
-### Deploy to Docker
-1. Open `BlogApiRepo/src` folder in terminal
-2. Deploy docker-compose container\
-`docker-compose up -d`
-3. Open `http://localhost/swagger` in browser to see SwaggerUI
+5. Open [https://localhost:7075/swagger](https://localhost:7075/swagger) in browser to see SwaggerUI
