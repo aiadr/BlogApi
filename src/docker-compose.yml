@@ -6,9 +6,9 @@ services:
     ports:
       - 80:80
     environment:
-      ConnectionStrings__BlogContext: Server=db;Port=5432;Database=BlogDb;User Id=postgres;Password=admin;
-      Auth__Username: "admin" 
-      Auth__Password: "admin"
+      ConnectionStrings__BlogContext: Server=db;Port=5432;Database=BlogDb;User Id=postgres;Password=${db_password};
+      Auth__Username: ${admin_username} 
+      Auth__Password: ${admin_password}
     depends_on:
       - db
   db:
@@ -16,6 +16,6 @@ services:
     volumes:
       - db-vol:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: admin
+      POSTGRES_PASSWORD: ${db_password}
 volumes:
   db-vol:

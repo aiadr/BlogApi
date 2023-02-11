@@ -33,9 +33,10 @@ Technical Requirements:
 - `GET /posts` - get all posts (with sorting, offset and limit)
 ## How to run
 ### Deploy to Docker
-1. Deploy using [docker-compose](src/docker-compose.yml) file\
-`docker-compose -f src/docker-compose.yml up -d`
-2. Open [http://localhost/swagger](http://localhost/swagger) in browser to see SwaggerUI
+1. Edit secrets in [.env.dev](src/.env.dev) file
+2. Deploy using [docker-compose](src/docker-compose.yml) file\
+`docker-compose -f src/docker-compose.yml --env-file src/.env.dev up -d`
+3. Open [http://localhost/swagger](http://localhost/swagger) in browser to see SwaggerUI
 ### Debug in IDE
 1. Have PostgreSql server ready to use
 2. Open solution in your IDE [BlogApi.sln](src/BlogApi.sln)
