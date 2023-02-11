@@ -33,14 +33,14 @@ Technical Requirements:
 - `GET /posts` - get all posts (with sorting, offset and limit)
 ## How to run
 ### Deploy to Docker
-1. Edit secrets in [.env.dev](src/.env.dev) file
-2. Deploy using [docker-compose](src/docker-compose.yml) file\
-`docker-compose -f src/docker-compose.yml --env-file src/.env.dev up -d`
+1. Edit secrets in [.env.dev](.env.dev) file
+2. Deploy using [docker-compose](docker-compose.yml) file\
+`docker-compose -f docker-compose.yml --env-file .env.dev up -d`
 3. Open [http://localhost/swagger](http://localhost/swagger) in browser to see SwaggerUI
 ### Debug in IDE
 1. Have PostgreSql server ready to use
-2. Open solution in your IDE [BlogApi.sln](src/BlogApi.sln)
-3. Edit configuration file [appsettings.Development.json](src/Blog.Api/appsettings.Development.json)
+2. Open solution in your IDE [BlogApi.sln](BlogApi.sln)
+3. Edit configuration file [appsettings.Development.json](Blog.Api/appsettings.Development.json)
     - `ConnectionStrings/BlogContext` - connection to your SQL DB
     - `Auth/Username` - administrator username
     - `Auth/Password` - administrator password
