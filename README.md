@@ -28,11 +28,9 @@ BlogApi is a backend service for your blog based on PostgreSql storage
 3. Create network to join BlogApi with DB and connect Postgres container to it\
 `docker network create blognet`\
 `docker network connect blognet postgres`
-4. Build application\
-`dotnet publish Blog.Api -c release -o published`
-5. Build docker image\
+4. Build docker image\
 `docker build --no-cache -t blogapi -f Dockerfile .`
-6. Run application container\
+5. Run application container\
 *Replace necessary parameters*\
 `docker run -d --name blogapi --network blognet -p 80:80 -e ConnectionStrings__BlogContext="Server=postgres;Port=5432;Database=BlogDb;User Id=postgres;Password=admin;" -e ASPNETCORE_ENVIRONMENT="Development" -e Auth__Username="admin" -e Auth__Password="admin" blogapi`
-7. Open `http://localhost/swagger` in browser to see SwaggerUI
+6. Open `http://localhost/swagger` in browser to see SwaggerUI
