@@ -17,13 +17,13 @@ public class BlogServiceTests
     private const string ContentSample3 = "content3";
     private const long IdSample1 = 1;
 
-    private readonly IRepository<Post> _postsRepository;
+    private readonly IBlogRepository _blogRepository;
     private readonly IBlogService _service;
 
     public BlogServiceTests()
     {
-        _postsRepository = RepositoryHelper.BuildInMemoryRepository<Post>();
-        _service = new BlogService(_postsRepository, MapperHelper.BuildMapper());
+        _blogRepository = RepositoryHelper.BuildInMemoryRepository();
+        _service = new BlogService(_blogRepository, MapperHelper.BuildMapper());
     }
 
     [Fact]
@@ -37,8 +37,8 @@ public class BlogServiceTests
             UpdateDate = DateTime.Now
         };
 
-        await _postsRepository.AddAsync(post);
-        await _postsRepository.SaveChangesAsync();
+        await _blogRepository.AddAsync(post);
+        await _blogRepository.SaveChangesAsync();
 
         var resultPost = await _service.GetPostAsync(post.Id);
 
@@ -87,10 +87,10 @@ public class BlogServiceTests
             UpdateDate = dateTime3
         };
 
-        await _postsRepository.AddAsync(post1);
-        await _postsRepository.AddAsync(post2);
-        await _postsRepository.AddAsync(post3);
-        await _postsRepository.SaveChangesAsync();
+        await _blogRepository.AddAsync(post1);
+        await _blogRepository.AddAsync(post2);
+        await _blogRepository.AddAsync(post3);
+        await _blogRepository.SaveChangesAsync();
 
         var result = await _service.GetAllPostsAsync(PostsSortField.CreationDate, true, 1, 1).ToListAsync();
 
@@ -116,7 +116,8 @@ public class BlogServiceTests
             Content = ContentSample1
         };
         var resultPost = await _service.CreatePostAsync(sourcePost);
-        var savedPost = await _postsRepository.GetReadOnlyAsync(query => query.Where(x => x.Id == resultPost.Id));
+        var savedPost =
+            await _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == resultPost.Id));
 
         savedPost.Should().NotBeNull();
         savedPost!.Id.Should().Be(resultPost.Id);
@@ -138,8 +139,8 @@ public class BlogServiceTests
             UpdateDate = creationDate
         };
 
-        await _postsRepository.AddAsync(savedPost);
-        await _postsRepository.SaveChangesAsync();
+        await _blogRepository.AddAsync(savedPost);
+        await _blogRepository.SaveChangesAsync();
 
         var sourcePost = new Post
         {
@@ -160,7 +161,8 @@ public class BlogServiceTests
         resultPost.UpdateDate.Should().BeAfter(creationDate);
         resultPost.UpdateDate.Should().BeBefore(dateAfterUpdate);
 
-        var updatedPost = await _postsRepository.GetReadOnlyAsync(query => query.Where(x => x.Id == savedPost.Id));
+        var updatedPost =
+            await _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == savedPost.Id));
 
         updatedPost.Should().NotBeNull();
         updatedPost!.Id.Should().Be(savedPost.Id);
@@ -186,7 +188,8 @@ public class BlogServiceTests
 
         resultPost.Should().BeNull();
 
-        var updatedPost = await _postsRepository.GetReadOnlyAsync(query => query.Where(x => x.Id == IdSample1));
+        var updatedPost =
+            await _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == IdSample1));
 
         updatedPost.Should().BeNull();
     }
@@ -203,14 +206,15 @@ public class BlogServiceTests
             UpdateDate = creationDate
         };
 
-        await _postsRepository.AddAsync(post);
-        await _postsRepository.SaveChangesAsync();
+        await _blogRepository.AddAsync(post);
+        await _blogRepository.SaveChangesAsync();
 
         var result = await _service.DeletePostAsync(post.Id);
 
         result.Should().BeTrue();
 
-        var deletedPost = await _postsRepository.GetReadOnlyAsync(query => query.Where(x => x.Id == post.Id));
+        var deletedPost =
+            await _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == post.Id));
 
         deletedPost.Should().BeNull();
     }

@@ -10,17 +10,17 @@ internal class BlogService : IBlogService
 {
     private const int MaxPostsQueryLimit = 10000;
 
-    private readonly IRepository<Post> _postsRepository;
+    private readonly IBlogRepository _blogRepository;
     private readonly IMapper _mapper;
 
-    public BlogService(IRepository<Post> context, IMapper mapper)
+    public BlogService(IBlogRepository context, IMapper mapper)
     {
-        _postsRepository = context;
+        _blogRepository = context;
         _mapper = mapper;
     }
 
     public Task<Post?> GetPostAsync(long id, CancellationToken cancellationToken)
-        => _postsRepository.GetReadOnlyAsync(query => query.Where(x => x.Id == id), cancellationToken);
+        => _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == id), cancellationToken);
 
 
     public IAsyncEnumerable<Post> GetAllPostsAsync(
@@ -29,7 +29,7 @@ internal class BlogService : IBlogService
         int? limit,
         int? offset,
         CancellationToken cancellationToken)
-        => _postsRepository.GetReadOnlyListAsync(query =>
+        => _blogRepository.GetReadOnlyListAsync<Post, Post>(query =>
             BuildPostsQuery(query, sortField, sortDescending, limit, offset));
 
 
@@ -39,15 +39,16 @@ internal class BlogService : IBlogService
         post.CreationDate = currentDate;
         post.UpdateDate = currentDate;
 
-        await _postsRepository.AddAsync(post, cancellationToken);
-        await _postsRepository.SaveChangesAsync(cancellationToken);
+        await _blogRepository.AddAsync(post, cancellationToken);
+        await _blogRepository.SaveChangesAsync(cancellationToken);
 
         return post;
     }
 
     public async Task<Post?> UpdatePostAsync(Post post, CancellationToken cancellationToken)
     {
-        var savedPost = await _postsRepository.GetAsync(query => query.Where(x => x.Id == post.Id), cancellationToken);
+        var savedPost =
+            await _blogRepository.GetAsync<Post>(query => query.Where(x => x.Id == post.Id), cancellationToken);
 
         if (savedPost == null)
         {
@@ -58,22 +59,22 @@ internal class BlogService : IBlogService
 
         savedPost.UpdateDate = DateTime.UtcNow;
 
-        await _postsRepository.SaveChangesAsync(cancellationToken);
+        await _blogRepository.SaveChangesAsync(cancellationToken);
 
         return savedPost;
     }
 
     public async Task<bool> DeletePostAsync(long id, CancellationToken cancellationToken)
     {
-        var post = await _postsRepository.GetAsync(query => query.Where(x => x.Id == id), cancellationToken);
+        var post = await _blogRepository.GetAsync<Post>(query => query.Where(x => x.Id == id), cancellationToken);
 
         if (post == null)
         {
             return false;
         }
 
-        _postsRepository.Remove(post);
-        await _postsRepository.SaveChangesAsync(cancellationToken);
+        _blogRepository.Remove(post);
+        await _blogRepository.SaveChangesAsync(cancellationToken);
 
         return true;
     }

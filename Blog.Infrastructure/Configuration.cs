@@ -11,7 +11,7 @@ public static class Configuration
         services.AddDbContext<BlogContext>(options =>
             options.UseNpgsql(connectionString));
 
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IBlogRepository, BlogRepository>();
     }
 
     public static void UseInfrastructure(this IServiceProvider serviceProvider)

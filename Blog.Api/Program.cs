@@ -15,7 +15,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.ConfigureSwagger();
 
 builder.Services.ConfigureAuth(builder.Configuration);
-builder.Services.ConfigureInfrastructure(builder.Configuration.GetConnectionString("BlogContext"));
+builder.Services.ConfigureInfrastructure(builder.Configuration.GetConnectionString("BlogContext")!);
 builder.Services.ConfigureServices();
 builder.Services.ConfigureApiMapping();
 
