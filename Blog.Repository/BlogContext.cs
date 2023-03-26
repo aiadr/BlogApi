@@ -1,7 +1,7 @@
-using Blog.Entities;
+using Blog.Repository.Contracts.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Blog.Infrastructure;
+namespace Blog.Repository;
 
 internal class BlogContext : DbContext
 {

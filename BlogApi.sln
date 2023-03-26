@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Api", "Blog.Api\Blog.Api.csproj", "{486ECFA8-0A29-4228-BE2F-D22EF1090CA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Infrastructure", "Blog.Infrastructure\Blog.Infrastructure.csproj", "{469E40D4-BE4C-4713-ADD8-721A4C772C7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Repository", "Blog.Repository\Blog.Repository.csproj", "{469E40D4-BE4C-4713-ADD8-721A4C772C7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Services", "Blog.Services\Blog.Services.csproj", "{C75E0B42-29EA-4E52-A160-E55A89670AC1}"
 EndProject
@@ -10,9 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Services.Contracts", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Services.Tests", "Blog.Services.Tests\Blog.Services.Tests.csproj", "{6D1C87D7-F989-446E-AFA4-4A1BF2FD3F04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Entities", "Blog.Entities\Blog.Entities.csproj", "{F9A3C33D-5476-4050-AAE8-3D548C54382F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Infrastructure.Contracts", "Blog.Infrastructure.Contracts\Blog.Infrastructure.Contracts.csproj", "{C93F9C95-43A8-4787-AD89-CA5BF6F109BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Repository.Contracts", "Blog.Repository.Contracts\Blog.Repository.Contracts.csproj", "{C93F9C95-43A8-4787-AD89-CA5BF6F109BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +38,6 @@ Global
 		{6D1C87D7-F989-446E-AFA4-4A1BF2FD3F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D1C87D7-F989-446E-AFA4-4A1BF2FD3F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D1C87D7-F989-446E-AFA4-4A1BF2FD3F04}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9A3C33D-5476-4050-AAE8-3D548C54382F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9A3C33D-5476-4050-AAE8-3D548C54382F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9A3C33D-5476-4050-AAE8-3D548C54382F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9A3C33D-5476-4050-AAE8-3D548C54382F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C93F9C95-43A8-4787-AD89-CA5BF6F109BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C93F9C95-43A8-4787-AD89-CA5BF6F109BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C93F9C95-43A8-4787-AD89-CA5BF6F109BD}.Release|Any CPU.ActiveCfg = Release|Any CPU

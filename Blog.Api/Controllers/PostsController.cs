@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using Blog.Api.Models;
-using Blog.Entities;
+using Blog.Repository.Contracts.Models;
 using Blog.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,18 +66,13 @@ public class PostsController : Controller
 
     [Authorize]
     [HttpPut]
-    [ProducesResponseType(typeof(PostDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdatePost(UpdatePostDto dto, CancellationToken cancellationToken)
     {
-        var post = await _blogService.UpdatePostAsync(_mapper.Map<Post>(dto), cancellationToken);
+        var success = await _blogService.UpdatePostAsync(_mapper.Map<Post>(dto), cancellationToken);
 
-        if (post == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(post);
+        return success ? Ok() : NotFound();
     }
 
     [Authorize]

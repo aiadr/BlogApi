@@ -1,8 +1,9 @@
-using Blog.Entities;
-using Blog.Infrastructure.Contracts;
+using Blog.Repository;
+using Blog.Repository.Contracts.Models;
 using Blog.Services.Contracts;
 using Blog.Services.Tests.Helpers;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace Blog.Services.Tests;
@@ -17,13 +18,13 @@ public class BlogServiceTests
     private const string ContentSample3 = "content3";
     private const long IdSample1 = 1;
 
-    private readonly IBlogRepository _blogRepository;
+    private readonly BlogContext _dbContext;
     private readonly IBlogService _service;
 
     public BlogServiceTests()
     {
-        _blogRepository = RepositoryHelper.BuildInMemoryRepository();
-        _service = new BlogService(_blogRepository, MapperHelper.BuildMapper());
+        _dbContext = RepositoryHelper.BuildInMemoryContext();
+        _service = new BlogService(new BlogRepository(_dbContext), MapperHelper.BuildMapper());
     }
 
     [Fact]
@@ -37,8 +38,8 @@ public class BlogServiceTests
             UpdateDate = DateTime.Now
         };
 
-        await _blogRepository.AddAsync(post);
-        await _blogRepository.SaveChangesAsync();
+        await _dbContext.AddAsync(post);
+        await _dbContext.SaveChangesAsync();
 
         var resultPost = await _service.GetPostAsync(post.Id);
 
@@ -87,10 +88,10 @@ public class BlogServiceTests
             UpdateDate = dateTime3
         };
 
-        await _blogRepository.AddAsync(post1);
-        await _blogRepository.AddAsync(post2);
-        await _blogRepository.AddAsync(post3);
-        await _blogRepository.SaveChangesAsync();
+        await _dbContext.AddAsync(post1);
+        await _dbContext.AddAsync(post2);
+        await _dbContext.AddAsync(post3);
+        await _dbContext.SaveChangesAsync();
 
         var result = await _service.GetAllPostsAsync(PostsSortField.CreationDate, true, 1, 1).ToListAsync();
 
@@ -117,7 +118,7 @@ public class BlogServiceTests
         };
         var resultPost = await _service.CreatePostAsync(sourcePost);
         var savedPost =
-            await _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == resultPost.Id));
+            await _dbContext.Set<Post>().Where(x => x.Id == resultPost.Id).FirstOrDefaultAsync();
 
         savedPost.Should().NotBeNull();
         savedPost!.Id.Should().Be(resultPost.Id);
@@ -139,8 +140,8 @@ public class BlogServiceTests
             UpdateDate = creationDate
         };
 
-        await _blogRepository.AddAsync(savedPost);
-        await _blogRepository.SaveChangesAsync();
+        await _dbContext.AddAsync(savedPost);
+        await _dbContext.SaveChangesAsync();
 
         var sourcePost = new Post
         {
@@ -149,20 +150,14 @@ public class BlogServiceTests
             Content = ContentSample2
         };
 
-        var resultPost = await _service.UpdatePostAsync(sourcePost);
+        var result = await _service.UpdatePostAsync(sourcePost);
 
         var dateAfterUpdate = DateTime.UtcNow;
 
-        resultPost.Should().NotBeNull();
-        resultPost!.Id.Should().Be(savedPost.Id);
-        resultPost.Title.Should().Be(TitleSample2);
-        resultPost.Content.Should().Be(ContentSample2);
-        resultPost.CreationDate.Should().Be(creationDate);
-        resultPost.UpdateDate.Should().BeAfter(creationDate);
-        resultPost.UpdateDate.Should().BeBefore(dateAfterUpdate);
+        result.Should().BeTrue();
 
         var updatedPost =
-            await _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == savedPost.Id));
+            await _dbContext.Set<Post>().Where(x => x.Id == savedPost.Id).FirstOrDefaultAsync();
 
         updatedPost.Should().NotBeNull();
         updatedPost!.Id.Should().Be(savedPost.Id);
@@ -171,7 +166,6 @@ public class BlogServiceTests
         updatedPost.CreationDate.Should().Be(creationDate);
         updatedPost.UpdateDate.Should().BeAfter(creationDate);
         updatedPost.UpdateDate.Should().BeBefore(dateAfterUpdate);
-        updatedPost.UpdateDate.Should().Be(resultPost.UpdateDate);
     }
 
     [Fact]
@@ -184,12 +178,12 @@ public class BlogServiceTests
             Content = ContentSample1
         };
 
-        var resultPost = await _service.UpdatePostAsync(sourcePost);
+        var result = await _service.UpdatePostAsync(sourcePost);
 
-        resultPost.Should().BeNull();
+        result.Should().BeFalse();
 
         var updatedPost =
-            await _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == IdSample1));
+            await _dbContext.Set<Post>().Where(x => x.Id == IdSample1).FirstOrDefaultAsync();
 
         updatedPost.Should().BeNull();
     }
@@ -206,15 +200,15 @@ public class BlogServiceTests
             UpdateDate = creationDate
         };
 
-        await _blogRepository.AddAsync(post);
-        await _blogRepository.SaveChangesAsync();
+        await _dbContext.AddAsync(post);
+        await _dbContext.SaveChangesAsync();
 
         var result = await _service.DeletePostAsync(post.Id);
 
         result.Should().BeTrue();
 
         var deletedPost =
-            await _blogRepository.GetReadOnlyAsync<Post, Post>(query => query.Where(x => x.Id == post.Id));
+            await _dbContext.Set<Post>().Where(x => x.Id == post.Id).FirstOrDefaultAsync();
 
         deletedPost.Should().BeNull();
     }

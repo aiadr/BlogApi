@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Blog.Entities\Blog.Entities.csproj" />
+      <ProjectReference Include="..\Blog.Repository.Contracts\Blog.Repository.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

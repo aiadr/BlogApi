@@ -7,14 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Aiadr.GenericRepository" Version="1.0.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Blog.Entities\Blog.Entities.csproj" />
-      <ProjectReference Include="..\Blog.Infrastructure.Contracts\Blog.Infrastructure.Contracts.csproj" />
+      <ProjectReference Include="..\Blog.Repository.Contracts\Blog.Repository.Contracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>

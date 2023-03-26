@@ -1,5 +1,5 @@
 using Blog.Api.Models;
-using Blog.Entities;
+using Blog.Repository.Contracts.Models;
 
 namespace Blog.Api.Configuration;
 

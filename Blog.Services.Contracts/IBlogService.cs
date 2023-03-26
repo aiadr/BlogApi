@@ -1,4 +1,4 @@
-using Blog.Entities;
+using Blog.Repository.Contracts.Models;
 
 namespace Blog.Services.Contracts;
 
@@ -14,6 +14,6 @@ public interface IBlogService
         CancellationToken cancellationToken = default);
 
     Task<Post> CreatePostAsync(Post post, CancellationToken cancellationToken = default);
-    Task<Post?> UpdatePostAsync(Post post, CancellationToken cancellationToken = default);
+    Task<bool> UpdatePostAsync(Post post, CancellationToken cancellationToken = default);
     Task<bool> DeletePostAsync(long id, CancellationToken cancellationToken = default);
 }

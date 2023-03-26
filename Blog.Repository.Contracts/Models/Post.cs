@@ -1,4 +1,4 @@
-namespace Blog.Entities;
+namespace Blog.Repository.Contracts.Models;
 
 public class Post
 {

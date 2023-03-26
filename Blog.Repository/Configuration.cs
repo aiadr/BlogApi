@@ -1,8 +1,8 @@
-using Blog.Infrastructure.Contracts;
+using Blog.Repository.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blog.Infrastructure;
+namespace Blog.Repository;
 
 public static class Configuration
 {

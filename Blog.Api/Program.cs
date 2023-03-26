@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 using Blog.Api.Configuration;
-using Blog.Infrastructure;
+using Blog.Repository;
 using Blog.Services;
 
 var builder = WebApplication.CreateBuilder(args);

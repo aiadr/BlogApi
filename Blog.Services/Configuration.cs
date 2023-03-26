@@ -1,5 +1,5 @@
 using AutoMapper;
-using Blog.Entities;
+using Blog.Repository.Contracts.Models;
 using Blog.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
