@@ -1,4 +1,4 @@
-using Blog.Repository.Contracts.Services;
+using Blog.Repository.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +11,7 @@ public static class Configuration
         services.AddDbContext<BlogContext>(options =>
             options.UseNpgsql(connectionString));
 
-        services.AddScoped<IBlogRepository, BlogRepository>();
+        services.AddScoped<IPostsRepository, PostsRepository>();
     }
 
     public static void UseInfrastructure(this IServiceProvider serviceProvider)

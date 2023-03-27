@@ -1,8 +1,5 @@
-using System.Runtime.CompilerServices;
-using AutoMapper;
-using Blog.Api.Models;
-using Blog.Repository.Contracts.Models;
 using Blog.Services.Contracts;
+using Blog.Services.Contracts.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +9,11 @@ namespace Blog.Api.Controllers;
 [Route("[controller]")]
 public class PostsController : Controller
 {
-    private readonly IBlogService _blogService;
-    private readonly IMapper _mapper;
+    private readonly IPostsService _postsService;
 
-    public PostsController(IBlogService blogService, IMapper mapper)
+    public PostsController(IPostsService postsService)
     {
-        _blogService = blogService;
-        _mapper = mapper;
+        _postsService = postsService;
     }
 
     [HttpGet("{id:long}")]
@@ -26,7 +21,7 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetPost(long id, CancellationToken cancellationToken)
     {
-        var post = await _blogService.GetPostAsync(id, cancellationToken);
+        var post = await _postsService.GetPostAsync(id, cancellationToken);
 
         if (post == null)
         {
@@ -38,39 +33,36 @@ public class PostsController : Controller
 
     [HttpGet]
     [ProducesResponseType(typeof(IAsyncEnumerable<PostDto>), StatusCodes.Status200OK)]
-    public async IAsyncEnumerable<PostDto> GetAllPosts(
+    public IAsyncEnumerable<PostDto> GetAllPosts(
         PostsSortField? sortField,
         bool? sortDescending,
         int? limit,
         int? offset,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
-        await foreach (var post in _blogService.GetAllPostsAsync(
-                           sortField,
-                           sortDescending,
-                           limit,
-                           offset,
-                           cancellationToken))
-        {
-            yield return _mapper.Map<PostDto>(post);
-        }
+        return _postsService.GetAllPostsAsync(
+            sortField,
+            sortDescending,
+            limit,
+            offset,
+            cancellationToken);
     }
 
     [Authorize]
     [HttpPost]
     [ProducesResponseType(typeof(PostDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreatePost(CreatePostDto dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreatePost(EditPostDto dto, CancellationToken cancellationToken)
     {
-        return Ok(await _blogService.CreatePostAsync(_mapper.Map<Post>(dto), cancellationToken));
+        return Ok(await _postsService.CreatePostAsync(dto, cancellationToken));
     }
 
     [Authorize]
-    [HttpPut]
+    [HttpPut("{id:long}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdatePost(UpdatePostDto dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdatePost(long id, EditPostDto dto, CancellationToken cancellationToken)
     {
-        var success = await _blogService.UpdatePostAsync(_mapper.Map<Post>(dto), cancellationToken);
+        var success = await _postsService.UpdatePostAsync(id, dto, cancellationToken);
 
         return success ? Ok() : NotFound();
     }
@@ -81,7 +73,7 @@ public class PostsController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeletePost(long id, CancellationToken cancellationToken)
     {
-        if (await _blogService.DeletePostAsync(id, cancellationToken))
+        if (await _postsService.DeletePostAsync(id, cancellationToken))
         {
             return Ok();
         }

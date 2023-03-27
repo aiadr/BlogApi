@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Blog.Repository.Contracts.Models;
 
-namespace Blog.Repository.Contracts.Services;
+namespace Blog.Repository.Contracts;
 
-public interface IBlogRepository
+public interface IPostsRepository
 {
     Task<Post?> GetPostAsync(long id, CancellationToken cancellationToken);
     IAsyncEnumerable<Post> GetAllPostsAsync(

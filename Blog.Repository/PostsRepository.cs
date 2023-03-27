@@ -1,17 +1,17 @@
 using System.Linq.Expressions;
+using Blog.Repository.Contracts;
 using Blog.Repository.Contracts.Models;
-using Blog.Repository.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Repository;
 
-internal class BlogRepository : IBlogRepository
+internal class PostsRepository : IPostsRepository
 {
     private const int MaxPostsQueryLimit = 10000;
 
     private readonly DbContext _context;
 
-    public BlogRepository(BlogContext context)
+    public PostsRepository(BlogContext context)
     {
         _context = context;
     }

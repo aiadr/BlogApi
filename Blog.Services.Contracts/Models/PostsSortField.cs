@@ -1,4 +1,4 @@
-namespace Blog.Services.Contracts;
+namespace Blog.Services.Contracts.Models;
 
 public enum PostsSortField
 {
